@@ -3,26 +3,37 @@ import './App.css';
 
 function App() {
 
+const [todoList, setTodoList] = useState([]);
 
-  //this will be our array for all the todo key:value pairs
-  const [todoList, setToDoList] = useState([]);
+const handleSubmit = (e) => {
+      console.log("executing handlesubmit")
+      e.preventDefault();
 
- const handleSubmit = (e) => {
-    e.preventDefault();
+      const newTodo = {
+        todoName: e.target.children[0].value,
+        done: false,
+        id: "" + Math.floor(Math.random() * 90000)
+      };
 
-    const newTodo = {
-      todoName: e.target.children[0].value,
-      done: false,
-      id: "" + Math.floor(Math.random() * 90000)
-    };
+      //because of asynchronous behaviour of useState a new variable 
+      //with up-to-date value of usestate is been created and passed to localstorage
+      const updatedTodoList =[newTodo, ...todoList]
+      setTodoList(updatedTodoList)
 
-    setToDoList((prevState) => {
-      return [...prevState, newTodo];
-    });
+      localStorage.setItem("stringifiedTodoList",JSON.stringify(updatedTodoList))
+}
+  
 
+useEffect(() => {
+  console.log("firing useEffect []")
+  const data = JSON.parse(localStorage.getItem("stringifiedTodoList"));
 
- }
-
+    if(data){
+      setTodoList(data)
+    }
+  }, []);
+  
+//----------------------
 
   return (
 
@@ -36,6 +47,12 @@ function App() {
 
       <div>
         <ul>
+          {todoList.map(e => (
+            <li key={e.id}>
+              <span>{e.todoName}</span><span> {e.done ? "true" : "false"}</span><span> {e.id}</span>
+            </li>
+          )
+          )}
 
         </ul>
       </div>
