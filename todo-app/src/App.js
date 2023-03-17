@@ -1,5 +1,11 @@
 import React, {useState, useEffect} from "react"
+import styled from "styled-components";
 import './App.css';
+
+const LIST = styled.li`
+    listStyle:"none";
+    text-decoration: "line-through";
+`;
 
 function App() {
 
@@ -26,7 +32,7 @@ function App() {
 
     const newTodo = {
       todoName: e.target.children[0].value,
-      done: false,
+      done: 'false',
       id: "" + Math.floor(Math.random() * 90000)
     };
 
@@ -52,10 +58,10 @@ function App() {
             setCompletedTaskCount(completedTaskCount -1);
           }
           item = {...task, done: !task.done};
-        } else item = {...task}
+        } else item = {...task};
       });
-      setToDoList(list)
-  }
+      setToDoList(list);
+  };
  
 
 
@@ -68,11 +74,21 @@ function App() {
         <input type="text" placeholder="add todo" />
         <input type="submit" />
       </form>
+      <div>
+      <div>
+            <b>Pending Tasks</b> {todoList.length - completedTaskCount}
+          </div>
+          <div>
+            <b>Completed Tasks</b> {completedTaskCount}
+          </div>
+      </div>
 
       <div>
         <ul>
         {todoList.map((element) => (
-          <li
+          <LIST
+          done={element.done}
+          id={element.id}
           onClick={() => handleComplete(element.id)}
            style={{
             listStyle:"none",
@@ -80,7 +96,7 @@ function App() {
           }
           }>
            {element.done.toString()} {element.todoName} ID: {element.id}
-          </li>
+          </LIST>
         ))}
         </ul>
       </div>
